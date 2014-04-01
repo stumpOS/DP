@@ -1,0 +1,57 @@
+f(S) = opt(d in D(S)){f(t(S,d)) o R(S,d)}	[0]
+
+S is the state. It defines the instance of the problem
+
+D(S) = {d1, d2, ..., dN} is the decision space.
+It is the set of elgible decisions while in state S
+// input format notes:
+// define decision space as either a function or as 
+// a set of  pairs. If the latter method is chosen,
+// the total decision space must also be included.
+
+f(S) is the objective function. It is the optimal solution
+of the subproblem defined by the state S
+
+t(S,d) is the transition function(s). It accepts the current
+state and the next decision to be made and returns the updated
+state. There may be more than one transition function in the case
+that [0] contains multiple recursive calls
+
+o is the operator. It is an associative operator that is usually
+addition or multiplication.
+
+R(S,d) is the reward function. It returns the cost of making the 
+choice d while in state S. It is independent of the other subproblems.
+// input format notes:
+// Define Reward as either a function or as a set of pairs, i.e.
+// R(S,d) := (x1,S1),(x2, S2),...,(xN, SN)}
+// where S1 union S2 union ... union SN = D
+// and R(S,d) = xi if d  is in Si
+// Enclose sets in curly brackets. You may also use
+// conditions on the state as indicators. Use the syntax: 
+// 	'cond(MyCondition)'
+// to indicate this. Separate conditions from sets with a comma,
+// and enclose both with parenthesis. If no parenthesis are present,
+// it is assumed either a set or a condition is used and not both.
+
+/*---------------EXAMPLE-------------------*/
+Sequence Alignment Problem
+Instance: string X, Y; 		// X = x1x2...xN, Y = y1y2...yM
+
+State: X[i], Y[j];		// X[i] = x1x2...xi; Y[j] = y1y2...yj
+
+Decision space: 
+D(TOTAL) = {'00','01','11'};	
+D(X[i],Y[j]) ={ ({'00','11','01'}, X[i]!=Y[j] ), ({'01'}, X[i]==Y[j] ) }
+
+//i.e. '00':insert into y,'11':insert into x,'01':no op 
+
+Transition function:
+t(X[i],Y[j],d) := {((X[i-1],Y[j]),{'11'}),((X[i-1],Y[j-1]),{'01'}),((X[i],Y[j-1]),{'00'})
+
+//i.e. '00' => j--;, '01' => i--;, '00' => j--;i--;
+
+Reward: 
+R(X[i],Y[j],d) := {(1,cond(X[i]!=Y[j])),(0,cond(X[i]==Y[j]))};	
+
+

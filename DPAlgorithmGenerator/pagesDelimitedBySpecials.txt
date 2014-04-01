@@ -1,0 +1,134 @@
+@
+Definition of DP#
+Dynamic Programming (DP) is a algorithm paradigm used to solve
+ optimization problems. The procedure uses the solutions of 
+subproblems to construct the solution to the original problem.
+ DP is most applicable when the problem exhibits the optimal
+substructure property.
+
+The optimal substructure property states that if the solution of
+a problem is comprised of solutions to smaller subproblems, then
+the subsolutions are the optimal solutions to the subproblems.
+@@
+Optimization Problem#
+We define a problem as a SPECIFICATION paired with a question in 
+the form of a requested output(i.e. RETURN). In particular, 
+we define an optimization problem as a problem of the following form:
+
+PROBLEM: Optimization
+SPECIFICATION: set of objects O = {o1, o2, ...,oN} or set
+ of sets of objects O = {O1, O2, ..., OM}
+RETURN: The sequence of decisions y such that
+         y = opt(d in D){C(d)},
+ where D is the set of decisions sequences such that R(O,d)
+for some binary relation R(O,y) and cost function C(y), where 
+y is a sequence of decisions made on O.
+
+The solution is constructed from the sequence of decisions made
+ on the input.
+@@
+Basic Problem Formulation#
+The DP algorithm for a problem is characterized by its so-called
+ Dynamic Programming Functional Equation (DPFE). This equation is
+ a recursive function that accepts as input the current state S 
+of the solution:
+
+f(S) = opt(d in D(S)){R(S,d) o f(T(S,d))}
+
+opt is either MIN or MAX
+S is the STATE
+D(S) is the DECISION SPACE.
+f(S) is the OBJECTIVE FUNCTION
+R(S,d) is the REWARD FUNCTION
+T(S,d) is the TRANSFORMATION FUNCTION(S)
+o is the OPERATOR
+
+@@
+State#
+The state of the problem is either
+
+(1) The sequence of decisions made thus far, or 
+(2) The set of eligible decisions for the next choice, given the
+ current state
+
+@@
+Decision Space#
+The decision space is the set of eligible decisions, given the 
+current state.
+
+ For example, consider the problem of finding a path in a weighted graph. 
+The state in this scenario is the path, or the sequence of vertices visited 
+thus far. The neighbors of the current vertex that are not already in the 
+state set S comprise the decision space D(S).
+@@
+Objective Function#
+The objective function f(S) accepts as input the current state of the solution
+and returns the optimal solution of the subproblem defined by this state.
+
+The objective of a DP problem is to find f(S) for the goal state
+
+@@
+Reward Function#
+The reward function is independent of the other subproblems. It can be 
+evaluated from information provided in the specification input alone.
+
+ For example, consider the problem of constructing a path in a directed,
+weighted graph. The cost of choosing the next node u in the path is the 
+weight of the arc from the current node v to the next node u, or weight(vu).
+Therefore, the reward function is R(S) = weight(vu), where S is the sequence 
+of vertices traveled thus far (i.e. S = v1v2v3...vi, with vi = v) and u
+is a neighbor of u and u is not in S.
+
+ Observe that while the reward function
+is dependent upon the state, there is no reference to the objective function
+(i.e. the subproblem solution table) 
+@@
+Transformation Function(s)#
+The transformation function takes as input the current state and the decision
+to be made and returns the new state of the solution after making the decision.
+
+There are three main forms of the transformation function that correspond to
+different classes of problems. The first is the case when one subproblem remains
+after making a choice:
+
+f(S) = opt(d in D){r(S,d) o t(S,d))}
+
+The second corresponds to the case when the problem is divided into two subproblems.
+This translates to having two transformation functions:
+
+f(S) = opt(d in D){r(S,d) o t1(S,d)) o t2(S,d))}
+
+An example of a problem with two transformation functions is the matrix order
+ multiplication problem.
+@@
+Operator#
+The operator is a binary operation and is usually addition or multiplication.
+The operation must be associative to account for the independence of the subproblems.
+@@
+HW3.2: k-state Markov Chain#
+Specification: Graph G that represents the Markov chain and string of symbols w
+Return: path p such that p is the most likely path through the Markov chain
+that could have produced w
+
+The DPFE is
+
+@@
+Example: Longest Common Subsequence#
+Problem: LCS
+Specification: string X = x1x2...xM, string Y = y1y2...yN
+(i.e. O = (X, Y))
+Return: string Z = z1z2...zK with relation 
+R(O,Z) := {Z|for every Z[i] there exists l, j s.t. Z[i] = X[l] = Y[j]
+and if k < i then l'<l and j'<j, where X[l'] = Y[j'] = Z[k]}
+
+Let Xi denote x1x2...xi and Yj denote y1y2...yj. The state S consists
+of a pair Xi, Yj. The DPFE is
+f(Xi,Yj) = 0		(if Xi or Yj is the empty string)
+	 = max(d in D(Xi,Yj){f(t(Xi,Yj,d))+r(Xi,Yj,d)}	(otherwise)
+@@
+HW3.1 Longest Simple Path#
+Specification: Directed Weighted Graph G, target vertex t and start vertex s
+Return: p = v1v2...vK such that p = max(p in P){SUM(weight(p[i]p[i+1]))}
+where P is the set of all paths from start to target vertex and p[i]p[i+1]
+denotes the edge from the ith vertex to the (i+1)th vertex.
+@@
